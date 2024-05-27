@@ -35,12 +35,16 @@ block main
                 .row
                   th Ảnh
                   th.col-md-3.col-12 Tên
+                  th Loại
                   th Giá
                   th Số lượng
                   th Tổng tiền
-                  th Thời gian
-                  th Trạng thái
-                  th
+                  if(orders.length>0)
+                    th Thời gian
+                  if(orders.length>0)
+                    th Trạng thái
+                  if(orders.length>0)
+                    th
             tbody
               if(orders.length>0)
                 each order, index in orders
@@ -55,7 +59,8 @@ block main
                         a(
                           href=`/products/detail/${order.productInfo.slug}`
                         ) #{order.productInfo.title}
-                      td.formatMoney #{order.priceNew}đ
+                      td #{order.sizeInfo.size}
+                      td.formatMoney #{order.sizeInfo.priceNew}đ
                       td
                         input(
                           value=order.quantity

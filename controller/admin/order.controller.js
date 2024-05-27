@@ -32,10 +32,15 @@ module.exports.index = async (req, res) => {
           const orderItem={}
           const product = await Product.findOne({
             _id: item.product_id
-          }).select("thumbnail title slug price discountPercentage status")
-          orderItem.priceNew = (product.price * (100 - product.discountPercentage)/100).toFixed(0)
+          }).select("thumbnail title slug listSize discountPercentage status")
+          
+          const sizeInfo = product.listSize.find(i=>{
+            return i.id == item.size_id
+          })
+          orderItem.sizeInfo = sizeInfo
     
           orderItem.productInfo = product
+          orderItem.sizeInfo.priceNew = (sizeInfo.price * (100 - product.discountPercentage)/100).toFixed(0)
 
           orderItem.userInfo = userInfo
 
@@ -43,7 +48,7 @@ module.exports.index = async (req, res) => {
           orderItem.id = item.id
           orderItem.status= item.status
     
-          orderItem.totalPrice = item.quantity * orderItem.priceNew
+          orderItem.totalPrice = item.quantity * orderItem.sizeInfo.priceNew
 
           orderItem.orderId = orderDetail.id
 

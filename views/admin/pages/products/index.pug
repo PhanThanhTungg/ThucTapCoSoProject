@@ -74,7 +74,10 @@ block main
                                             height="auto"
                                         )
                                     td #{item.title}
-                                    td #{item.price}$
+                                    td 
+                                        select
+                                            each i in item.listPrice 
+                                                option #{i} đ 
                                     td #{item.sales}
                                     td 
                                         input(

@@ -24,9 +24,9 @@ module.exports.index = async (req, res) => {
       item.sizeInfo = sizeInfo
       item.productInfo = product
 
-      // item.totalPrice = item.quantity * size.priceNew
+      item.totalPrice = item.quantity * sizeInfo.priceNew
 
-      // cart.totalPrice += item.totalPrice
+      cart.totalPrice += item.totalPrice
     }
   }
 
@@ -49,8 +49,7 @@ module.exports.addPost = async (req, res) => {
     })
 
     const existProductInCart = cart.products.find(item => {
-      item.product_id == productId
-      item.sizeId == sizeId
+      return item.product_id == productId && item.sizeId == sizeId
     });
 
     if (existProductInCart) {
@@ -64,7 +63,7 @@ module.exports.addPost = async (req, res) => {
         $set: {
           "products.$.quantity": quantityNew
         }
-      });
+      })
     } else {
 
       const objectCart = {
@@ -93,12 +92,13 @@ module.exports.addPost = async (req, res) => {
 module.exports.delete = async (req, res) => {
   const cartId = req.cookies.cartId
   const productId = req.params.productId
+  const sizeId = req.params.sizeId
 
 
   await Cart.updateOne({
     _id: cartId
   }, {
-    $pull: { products: { product_id: productId } }  //$pull: xóa đi
+    $pull: { products: { product_id: productId, sizeId: sizeId} }  //$pull: xóa đi
   })
 
   req.flash("success", "Đã xóa sản phẩm khỏi giỏ hàng!")
@@ -108,13 +108,15 @@ module.exports.delete = async (req, res) => {
 
 
 module.exports.update = async (req, res) => {
-  const cartId = req.cookies.cartId;
-  const productId = req.params.productId;
-  const quantity = req.params.quantity;
+  const cartId = req.cookies.cartId
+  const productId = req.params.productId
+  const quantity = req.params.quantity
+  const sizeId = req.params.sizeId
 
   await Cart.updateOne({
     _id: cartId,
-    "products.product_id": productId
+    "products.product_id": productId,
+    "products.sizeId": sizeId
   }, {
     $set: { "products.$.quantity": quantity }
   });

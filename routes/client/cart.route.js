@@ -7,8 +7,8 @@ router.get("/", controller.index)
 
 router.post("/add/:productId", controller.addPost)
 
-router.get("/delete/:productId", controller.delete)
+router.get("/delete/:productId/:sizeId", controller.delete)
 
-router.get("/update/:productId/:quantity", controller.update)
+router.get("/update/:productId/:sizeId/:quantity", controller.update)
 
 module.exports = router;

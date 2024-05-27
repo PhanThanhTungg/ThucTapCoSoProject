@@ -13,7 +13,9 @@ module.exports.index = async (req, res) => {
     })
 
     for (const item of productsFeatured) {
-        item.priceNew = (item.price * (100 - item.discountPercentage)/100).toFixed(0);
+        for(const size of item.listSize){
+            size.priceNew = (size.price * (100 - item.discountPercentage)/100).toFixed(0);
+        }
     }
     
     //sort
@@ -46,7 +48,9 @@ module.exports.index = async (req, res) => {
     }).limit(objectPagination.limit).sort(sort).skip(objectPagination.skip)
 
     for (const item of productsNew) {
-        item.priceNew = (item.price * (100 - item.discountPercentage)/100).toFixed(0);
+        for(const size of item.listSize){
+            size.priceNew = (size.price * (100 - item.discountPercentage)/100).toFixed(0);
+        }
     }
 
     let sort2 ={}
@@ -57,7 +61,9 @@ module.exports.index = async (req, res) => {
     }).limit(10).sort(sort2)
 
     for (const item of topProduct) {
-        item.priceNew = (item.price * (100 - item.discountPercentage)/100).toFixed(0);
+        for(const size of item.listSize){
+            size.priceNew = (size.price * (100 - item.discountPercentage)/100).toFixed(0);
+        }
     }
 
     res.render("client/pages/home/index", {

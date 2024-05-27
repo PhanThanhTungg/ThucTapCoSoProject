@@ -15,17 +15,23 @@ module.exports.index = async (req, res) => {
     for (const item of cart.products) {
       const product = await Product.findOne({
         _id: item.product_id
-      }).select("thumbnail title slug price discountPercentage");
+      }).select("thumbnail title slug listSize discountPercentage")
 
-      product.priceNew = (product.price * (100 - product.discountPercentage)/100).toFixed(0);
+      const sizeInfo = product.listSize.find(i=>{
+        return i.id == item.sizeId
+      })
 
-      item.productInfo = product;
+      sizeInfo.priceNew = (sizeInfo.price * (100 - product.discountPercentage)/100).toFixed(0)
 
-      item.totalPrice = item.quantity * product.priceNew;
+      item.sizeInfo = sizeInfo
+      item.productInfo = product
 
-      cart.totalPrice += item.totalPrice;
+      item.totalPrice = item.quantity * sizeInfo.priceNew
+
+      cart.totalPrice += item.totalPrice
     }
   }
+
 
   res.render("client/pages/checkout/index", {
     pageTitle: "Đặt hàng",
@@ -47,17 +53,17 @@ module.exports.order = async (req, res) => {
   for (const product of cart.products) {
     const objectProduct = {
       product_id: product.product_id,
-      price: 0,
-      discountPercentage: 0,
+      size_id: product.sizeId,
       quantity: product.quantity,
     }
 
     const productInfo = await Product.findOne({
       _id: product.product_id
-    }).select("price discountPercentage")
+    }).select("listSize discountPercentage")
 
-    objectProduct.price = productInfo.price
-    objectProduct.discountPercentage = productInfo.discountPercentage
+    const sizeInfo = productInfo.listSize.find(i=>{
+      return i.id = product.sizeId
+    })
 
     products.push(objectProduct)
   }
@@ -93,16 +99,29 @@ module.exports.success = async (req, res) => {
       _id: product.product_id
     })
 
+    const sizeInfo = infoProduct.listSize.find(i=>{
+      return i.id == product.size_id
+    })
+
+    product.sizeInfo = sizeInfo
     product.title = infoProduct.title
     product.thumbnail = infoProduct.thumbnail
 
-    product.priceNew = (product.price * (100 - product.discountPercentage)/100).toFixed(0)
+    product.sizeInfo.priceNew = (product.sizeInfo.price * (100 - infoProduct.discountPercentage)/100).toFixed(0)
 
-    product.totalPrice = product.priceNew * product.quantity
-    const currentStock = infoProduct.stock-product.quantity
+    product.totalPrice = product.sizeInfo.priceNew * product.quantity
+    const currentStock = sizeInfo.stock-product.quantity
     await Product.updateOne({_id: product.product_id},{
-      stock: currentStock,
       sales: infoProduct.sales + product.quantity
+    })
+
+    await Product.updateOne({
+      _id: product.product_id,
+      "listSize._id": sizeInfo._id
+    }, {
+      $set: {
+        "listSize.$.stock": currentStock
+      } 
     })
 
     totalPrice += product.totalPrice

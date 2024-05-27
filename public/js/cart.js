@@ -7,8 +7,9 @@ if(tableCart) {
     input.addEventListener("change", () => {
       const productId = input.getAttribute("item-id")
       const quantity = input.value
+      const sizeId = input.getAttribute("sizeId")
 
-      window.location.href = `/cart/update/${productId}/${quantity}`;
+      window.location.href = `/cart/update/${productId}/${sizeId}/${quantity}`;
     })
   })
 }

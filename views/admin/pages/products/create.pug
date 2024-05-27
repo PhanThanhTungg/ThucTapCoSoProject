@@ -68,13 +68,14 @@ block main
                             th price 
                             th stock
                     tbody
-                        tr.data
+                        tr
                             td 
                                 input(
                                     type="text"
                                     class="form-control"
                                     id="size"
                                     name="size"
+                                    required
                                 )
                             td 
                                 input(
@@ -82,6 +83,7 @@ block main
                                     class="form-control"
                                     id="price"
                                     name="price"
+                                    required
                                 )
                             td 
                                 input(
@@ -89,6 +91,7 @@ block main
                                     class="form-control"
                                     id="stock"
                                     name="stock"
+                                    required
                                 )
                 .button-1.btn.btn-primary.mt-3.buttonAddSize.mr-3 + size
                 .button-1.btn.btn-primary.mt-3.buttonDelSize - size

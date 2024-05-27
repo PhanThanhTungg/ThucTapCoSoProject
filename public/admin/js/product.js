@@ -48,16 +48,21 @@ if(buttonDelete.length>0){
 const buttonAddSize = document.querySelector(".buttonAddSize")
 const buttonDelSize = document.querySelector(".buttonDelSize")
 buttonAddSize.addEventListener("click",()=>{
-    const tableData = document.querySelector(".tableSize tbody .data")
     const tableSize = document.querySelector(".tableSize tbody")
-    tableSize.innerHTML = tableSize.innerHTML + tableData.innerHTML
-    console.log(tableSize)
+    const tableData = tableSize.firstElementChild
+    const firstRow = tableData.cloneNode(true)
+    for(const item of firstRow.querySelectorAll("input")){
+        item.value = ""
+    }
+    tableSize.appendChild(firstRow)
 })
 buttonDelSize.addEventListener("click", ()=>{
     const tableSize = document.querySelector(".tableSize tbody")
-    const lastRow = tableSize.lastElementChild
-    tableSize.removeChild(lastRow)
-    console.log(lastRow)
+    const cnt = tableSize.querySelectorAll("tr").length
+    if(cnt > 1){
+        const lastRow = tableSize.lastElementChild
+        tableSize.removeChild(lastRow)
+    }
 })
 
 

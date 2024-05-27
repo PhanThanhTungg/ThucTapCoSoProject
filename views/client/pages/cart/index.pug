@@ -20,7 +20,8 @@ block main
                 th Giá
                 th Số lượng
                 th Tổng tiền
-                th Xóa
+                if(cartDetail.products.length > 0)
+                  th Xóa
             tbody
               if(cartDetail.products.length > 0)
                 each item, index in cartDetail.products
@@ -44,13 +45,14 @@ block main
                         name="quantity"
                         value=item.quantity
                         min="1"
+                        sizeId = item.sizeInfo.id
                         item-id=item.product_id
                         style="width: 60px"
                       )
                     td.formatMoney #{item.totalPrice}đ
                     td
                       a(
-                        href=`/cart/delete/${item.product_id}`
+                        href=`/cart/delete/${item.product_id}/${item.sizeInfo.id}`
                         class="btn btn-danger delete-button"
                       ) Xóa
               else

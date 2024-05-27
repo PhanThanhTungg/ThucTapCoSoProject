@@ -48,12 +48,12 @@ block main
               value=product.listSize[0].id
             )
             input(
-              class="form-control mb-2"
+              class="form-control mb-2 stockInput"
               type="number"
               name="quantity"
               value="1"
               min="1"
-              max=product.stock
+              max=product.listSize[0].stock
             )
             button(
               type="submit"

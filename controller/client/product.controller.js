@@ -36,9 +36,11 @@ module.exports.index = async (req,res)=>{
         deleted: false
     }).limit(objectPagination.limit).sort(sort).skip(objectPagination.skip)
 
-    products.forEach(item =>{
-        item.priceNew = (item.price*(100-item.discountPercentage)/100).toFixed()
-    })
+    for (const item of products) {
+      for(const size of item.listSize){
+          size.priceNew = (size.price * (100 - item.discountPercentage)/100).toFixed(0);
+      }
+    }
 
     res.render("client/pages/products/index.pug",{
       pageTitle: "TRANG SẢN PHẨM",
@@ -84,8 +86,11 @@ module.exports.detail = async (req,res)=>{
           status: "active" 
         })
         for (const item of relatedProduct) {
-          item.priceNew = (item.price * (100 - item.discountPercentage)/100).toFixed(0);
-      }
+          for(const size of item.listSize){
+              size.priceNew = (size.price * (100 - item.discountPercentage)/100).toFixed(0);
+          }
+        }
+  
         
         res.render("client/pages/products/detail.pug",{
             pageTitle: product.title,
@@ -164,10 +169,12 @@ module.exports.category = async(req, res)=>{
 
   const products = await Product.find(find).sort(sort).limit(objectPagination.limit).skip(objectPagination.skip);
 
-
   for (const item of products) {
-    item.priceNew = (item.price * (100 - item.discountPercentage)/100).toFixed(0);
+    for(const size of item.listSize){
+        size.priceNew = (size.price * (100 - item.discountPercentage)/100).toFixed(0);
+    }
   }
+  
   
   res.render("client/pages/products/index", {
     pageTitle: category.title,

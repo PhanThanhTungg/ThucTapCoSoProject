@@ -37,14 +37,21 @@ module.exports.index = async (req, res) => {
           const orderItem = {}
           const product = await Product.findOne({
             _id: item.product_id
-          }).select("thumbnail title slug price discountPercentage status")
+          }).select("thumbnail title slug listSize discountPercentage status")
+
+          const sizeInfo = product.listSize.find(i=>{
+            return i.id == item.size_id
+          })
+          orderItem.sizeInfo = sizeInfo
+
           order.product_id = item.product_id
-          orderItem.priceNew = (product.price * (100 - product.discountPercentage)/100).toFixed(0)
+
+          orderItem.sizeInfo.priceNew = (sizeInfo.price * (100 - product.discountPercentage)/100).toFixed(0)
     
           orderItem.productInfo = product
           orderItem.quantity= item.quantity
     
-          orderItem.totalPrice = item.quantity * orderItem.priceNew
+          orderItem.totalPrice = item.quantity * orderItem.sizeInfo.priceNew
           orderItem.createAt = orderDetail.createdAt
           orderItem.order_id = item.id
           orderItem.object_id = orderDetail.id
@@ -132,6 +139,7 @@ module.exports.index = async (req, res) => {
 module.exports.deleteItem = async (req,res)=>{
   const orderId = req.params.id
   const objectId = req.params.objectId
+
   const order = await Order.findOne({
     _id: objectId
   })
@@ -142,17 +150,28 @@ module.exports.deleteItem = async (req,res)=>{
     for (const item of order.products) {
       if(orderId== item.id){
         item.status ="daHuy"
-      }
-
-      const infoProduct = await Product.findOne({
-        _id: item.product_id
-      })
-
-      const currentStock = infoProduct.stock + item.quantity
-      await Product.updateOne({_id: item.product_id},{
-        stock: currentStock,
-        sales: infoProduct.sales - item.quantity
-      })
+        const infoProduct = await Product.findOne({
+          _id: item.product_id
+        })
+  
+        const sizeInfo = infoProduct.listSize.find(i=>{
+          return i.id == item.size_id
+        })
+  
+        const currentStock = sizeInfo.stock + item.quantity
+        await Product.updateOne({_id: item.product_id},{
+          sales: infoProduct.sales - item.quantity
+        })
+  
+        await Product.updateOne({
+          _id: item.product_id,
+          "listSize._id": sizeInfo._id
+        }, {
+          $set: {
+            "listSize.$.stock": currentStock
+          } 
+        })
+      } 
     }}
   await Order.updateOne({_id: objectId}, {products: listProduct})
   res.redirect("back") // Quay lai trang truoc khi chuyen huong

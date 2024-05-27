@@ -38,6 +38,7 @@ block main
                   th STT
                   th Ảnh
                   th Tên
+                  th Loại
                   th Giá
                   th Số lượng
                   th Tổng tiền
@@ -53,7 +54,8 @@ block main
                           width="80px"
                         )
                       td #{item.title}
-                      td.formatMoney #{item.price} 
+                      td #{item.sizeInfo.size}
+                      td.formatMoney #{item.sizeInfo.priceNew} 
                       td #{item.quantity}
                       td.formatMoney #{item.totalPrice} 
 

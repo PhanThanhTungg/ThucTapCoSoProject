@@ -1259,8 +1259,10 @@ display: none;
 
 .button-size{
   background-color: transparent !important;
-  border: 1px solid white !important;
-  color: white
+  border-bottom: 1px solid white !important;
+  border-right: 1px solid white !important;
+  color: white;
+  border-radius: 5px;
 }
 
 .button-size:hover{
@@ -1270,7 +1272,33 @@ display: none;
 }
 
 .button-size-active{
-  background-color: #0ebcbf !important;
-  color: rgb(126, 83, 3) !important;
-  border: 1px solid orange !important;
+  color: rgba(255, 166, 0, 0.738) !important;
+  border-bottom: 1px solid rgba(255, 166, 0, 0.673) !important;
+  border-right: 1px solid rgba(255, 166, 0, 0.64) !important;
+  font-weight: bolder;
+}
+
+.button-size-layout{
+  background: transparent !important;
+  color: white;
+  font-size: 12px;
+  padding: 2px 5px;
+  margin: 10px 5px;
+  border-bottom: 1px solid white !important;
+  border-right: 1px solid white !important;
+  border-radius: 10%;
+}
+
+.button-size-layout:hover{
+  color:#0ebcbf !important;
+  border-bottom: 1px solid #0ebcbf !important;
+  border-right: 1px solid #0ebcbf !important;
+  font-weight: bolder;
+}
+
+.button-size-layout-active{
+  border-bottom: 1px solid rgba(255, 166, 0, 0.673) !important;
+  border-right: 1px solid rgba(255, 166, 0, 0.64) !important;
+  color: rgba(255, 166, 0, 0.738);
+  font-weight: 700;
 }

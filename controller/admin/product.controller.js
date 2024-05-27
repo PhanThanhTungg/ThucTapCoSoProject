@@ -53,6 +53,10 @@ module.exports.index = async(req,res)=>{
     .sort(sort) // asc
 
     for(const product of products){
+        product.listPrice = []
+        product.listSize.forEach(item=>{
+            product.listPrice.push(item.size+"---"+item.price)
+        })
         const user = await Account.findOne({_id: product.createBy.account_id})
 
         if(user){
@@ -237,15 +241,24 @@ module.exports.editPatch = async (req,res)=>{
     const prices = req.body.price
     const stocks = req.body.stock
     var listSize = []
-    sizes.forEach((item,index) => {
+    if(typeof sizes == "string"){
         const objectTmp = {
-            size: item,
-            price: prices[index],
-            stock: stocks[index]
+            size: sizes,
+            price: prices,
+            stock: stocks
         }
         listSize.push(objectTmp)
-    });
-
+    }
+    else{
+        for(let i = 0; i < sizes.length;i++){
+            const objectTmp = {
+                size: sizes[i],
+                price: prices[i],
+                stock: stocks[i]
+            }
+            listSize.push(objectTmp)
+        }
+    }
     delete req.body.size
     delete req.body.price
     delete req.body.stock
