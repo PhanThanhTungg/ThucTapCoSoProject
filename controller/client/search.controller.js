@@ -14,9 +14,11 @@ module.exports.index = async (req, res) => {
       deleted: false
     }).sort({ position: "desc" })
 
-    products.forEach(item =>{
-      item.priceNew = (item.price*(100-item.discountPercentage)/100).toFixed()
-  })
+    for (const item of products) {
+      for(const size of item.listSize){
+          size.priceNew = (size.price * (100 - item.discountPercentage)/100).toFixed(0);
+      }
+    }
   }
 
   res.render("client/pages/search/index", {

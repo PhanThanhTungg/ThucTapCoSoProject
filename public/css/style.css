@@ -1302,3 +1302,45 @@ display: none;
   color: rgba(255, 166, 0, 0.738);
   font-weight: 700;
 }
+
+.formCart{
+  display: flex;
+  align-items: center;
+
+}
+
+.formCart .stockInput{
+  width: 10%;
+  text-align: center;
+  background-color: black;
+  color: white;
+  border-radius: 0;
+  margin-right: 5px;
+  height: 40px;
+}
+.formCart button{
+  width: 200px;
+  border-radius: 0;
+  height: 40px;
+  background-color: #0ebcbf5b;
+}
+.formCart .stockInput:focus {
+  color: white;
+  background-color: black;
+  border-color: rgba(255, 166, 0, 0.847);
+  outline: 0;
+  box-shadow: none;
+}
+
+input:focus {
+  border-color: rgba(255, 166, 0, 0.847) !important;
+  outline: 0;
+  box-shadow: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+

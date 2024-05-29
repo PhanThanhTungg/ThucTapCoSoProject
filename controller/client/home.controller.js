@@ -53,6 +53,19 @@ module.exports.index = async (req, res) => {
         }
     }
 
+    if(req.query.sortKey=="price"){
+        productsNew.sort((a,b)=>{
+          if(req.query.sortValue=="desc"){
+            if(a.listSize[0].priceNew < b.listSize[0].priceNew) return 1
+            else return -1
+          }
+          else{
+            if(a.listSize[0].priceNew < b.listSize[0].priceNew) return -1
+            else return 1
+          }
+        })
+      }
+
     let sort2 ={}
     sort2.sales = "desc"
     const topProduct = await Product.find({

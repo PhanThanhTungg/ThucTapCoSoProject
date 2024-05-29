@@ -13,6 +13,8 @@ block main
         .col-xl-6.col-md-6
           h1(class="inner-title") #{product.title}
 
+          hr(style="background-color: gray")
+
           if (product.category)
             div(class="inner-category") 
               span.text Danh mục: 
@@ -22,10 +24,8 @@ block main
               button.button-size.mt-3.mb-3.mr-3(id=item.id price=item.price priceNew=item.priceNew stock=item.stock) #{item.size}
           if (product.listSize)
             div(class="inner-price-new") <i class="fa-solid fa-coins"></i> <span class= "formatMoney"> #{product.listSize[0].priceNew}đ</span>
-
           if (product.listSize)
             div(class="inner-price-old formatMoney") #{product.listSize[0].price} đ
-
           if (product.discountPercentage)
             div(class="inner-percent text") <i class="fa-solid fa-arrow-trend-down"></i> Giảm tới <span>#{product.discountPercentage} %</span>
 
@@ -48,7 +48,7 @@ block main
               value=product.listSize[0].id
             )
             input(
-              class="form-control mb-2 stockInput"
+              class="form-control stockInput"
               type="number"
               name="quantity"
               value="1"
@@ -93,6 +93,7 @@ block main
                       id="desc"
                       name="description"
                       rows="6"
+                      required
                   )
                 div(class="form-group" style="margin: 0; padding-bottom:30px; display: flex; justify-content: flex-end")
                   button(

@@ -1,3 +1,4 @@
+//Phan Thanh Tung _ B21DCCN775
 const mongoose = require("mongoose")
 
 const cartSchema = new mongoose.Schema(
@@ -20,3 +21,4 @@ const cartSchema = new mongoose.Schema(
 const Cart = mongoose.model('Cart'/*ten model */, cartSchema, "carts" /*ten collection*/)
 
 module.exports = Cart
+

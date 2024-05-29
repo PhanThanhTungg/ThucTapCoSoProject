@@ -1,6 +1,7 @@
 const User = require("../../model/user.model")
 
 const Order = require("../../model/order.model")
+const Product = require("../../model/product.model")
 
 const filterStatusHelper = require("../../helpers/filterStatus")
 const searchHelper = require("../../helpers/search")
@@ -54,16 +55,26 @@ module.exports.index = async (req,res)=>{
       let cntFail = 0
       let totalValue = 0
       const orders= await Order.find({tokenUser: record.tokenUser})
-      orders.forEach(order=>{
-        order.products.forEach(product=>{
-          let priceNew = (product.price * (100 - product.discountPercentage)/100).toFixed(0)
+      for (const order of orders){
+        for (const product of order.products){
+          const productItem = await Product.findOne({
+            _id: product.product_id, 
+            status: "active",
+            deleted: false,
+          })
+
+          const sizeInfo = productItem.listSize.find(i=>{
+            return i.id == product.size_id
+          })
+
+          let priceNew = (sizeInfo.price * (100 - productItem.discountPercentage)/100).toFixed(0)
           if(product.status == "biBom") cntFail+=product.quantity
           if(product.status == "daThanhToan"){
-            cntSuccess+=product.quantity
-            totalValue+= priceNew*product.quantity
+            cntSuccess += product.quantity
+            totalValue += priceNew*product.quantity
           } 
-        })
-      })
+        }
+      }
       record.cntSuccess = cntSuccess
       record.cntFail = cntFail
       record.totalValue = totalValue

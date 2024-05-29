@@ -25,6 +25,6 @@ const accountSchema = new mongoose.Schema(
     }
 )
 
-const Account = mongoose.model('Account'/*ten model */, accountSchema, "accounts" /*ten collection*/)
+const Account = mongoose.model('Account'/*ten model */, accountSchema, "admins" /*ten collection*/)
 
 module.exports = Account

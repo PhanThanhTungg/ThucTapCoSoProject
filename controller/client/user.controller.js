@@ -7,7 +7,7 @@ const generateHelper = require("../../helpers/generate")
 const sendMailHelper = require("../../helpers/send-mail")
 
 const Order = require("../../model/order.model")
-
+const Product = require("../../model/product.model")
 module.exports.register = async (req, res) => {
   res.render("client/pages/user/register", {
     pageTitle: "Đăng ký tài khoản",
@@ -138,8 +138,9 @@ module.exports.forgotPasswordPost = async (req, res) => {
   const objectForgotPassword = {
     email: email,
     otp: otp,
-    expireAt: Date.now()
+    expireAt: new Date(Date.now() + 600 * 1000)
   }
+
 
   const record = new ForgotPassword(objectForgotPassword)
   await record.save()
@@ -219,16 +220,26 @@ module.exports.info = async (req, res) => {
   let cntFail = 0
   let cntSuccess = 0
   const orders= await Order.find({tokenUser: tokenUser})
-  orders.forEach(order=>{
-    order.products.forEach(product=>{
-      let priceNew = (product.price * (100 - product.discountPercentage)/100).toFixed(0)
+  for (const order of orders){
+    for (const product of order.products){
+      const productItem = await Product.findOne({
+        _id: product.product_id, 
+        status: "active",
+        deleted: false,
+      })
+
+      const sizeInfo = productItem.listSize.find(i=>{
+        return i.id == product.size_id
+      })
+
+      let priceNew = (sizeInfo.price * (100 - productItem.discountPercentage)/100).toFixed(0)
       if(product.status == "biBom") cntFail+=product.quantity
       if(product.status == "daThanhToan"){
-        cntSuccess+=product.quantity
-        totalValue+= priceNew*product.quantity
+        cntSuccess += product.quantity
+        totalValue += priceNew*product.quantity
       } 
-    })
-  })
+    }
+  }
   const rank = totalValue >= 100000000?"Chiến tướng":(
     totalValue >=50000000? "Cao thủ":(
       totalValue >=10000000?"Kim cương":( 

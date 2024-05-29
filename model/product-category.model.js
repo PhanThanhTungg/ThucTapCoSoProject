@@ -5,7 +5,7 @@ mongoose.plugin(slug)
 
 const productCategorySchema = new mongoose.Schema(
     { 
-        title: String,
+        title: String,  
         parent_id:{
             type: String,
             default: ""
@@ -30,6 +30,6 @@ const productCategorySchema = new mongoose.Schema(
     }
 )
 
-const ProductCategory = mongoose.model('ProductCategory'/*ten model */, productCategorySchema, "products-category" /*ten collection*/)
+const ProductCategory = mongoose.model('ProductCategory'/*ten model */, productCategorySchema, "categorys" /*ten collection*/)
 
 module.exports = ProductCategory

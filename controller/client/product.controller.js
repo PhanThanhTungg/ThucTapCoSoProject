@@ -35,12 +35,27 @@ module.exports.index = async (req,res)=>{
         status: "active",
         deleted: false
     }).limit(objectPagination.limit).sort(sort).skip(objectPagination.skip)
+    
 
     for (const item of products) {
       for(const size of item.listSize){
           size.priceNew = (size.price * (100 - item.discountPercentage)/100).toFixed(0);
       }
     }
+
+    if(req.query.sortKey=="price"){
+      products.sort((a,b)=>{
+        if(req.query.sortValue=="desc"){
+          if(a.listSize[0].priceNew < b.listSize[0].priceNew) return 1
+          else return -1
+        }
+        else{
+          if(a.listSize[0].priceNew < b.listSize[0].priceNew) return -1
+          else return 1
+        }
+      })
+    }
+    
 
     res.render("client/pages/products/index.pug",{
       pageTitle: "TRANG SẢN PHẨM",
@@ -90,7 +105,7 @@ module.exports.detail = async (req,res)=>{
               size.priceNew = (size.price * (100 - item.discountPercentage)/100).toFixed(0);
           }
         }
-  
+        console.log(product.sales)
         
         res.render("client/pages/products/detail.pug",{
             pageTitle: product.title,
