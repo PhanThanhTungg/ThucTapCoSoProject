@@ -176,14 +176,25 @@ module.exports.createPost = async (req,res)=>{
     const prices = req.body.price
     const stocks = req.body.stock
     var listSize = []
-    sizes.forEach((item,index) => {
-        const objectTmp = {
-            size: item,
-            price: prices[index],
-            stock: stocks[index]
+    if(typeof sizes == "string"){
+        var objectTmp = {
+            size: sizes,
+            price: prices,
+            stock: stocks
         }
         listSize.push(objectTmp)
-    });
+    }
+    else{
+        sizes.forEach((item,index) => {
+            const objectTmp = {
+                size: item,
+                price: prices[index],
+                stock: stocks[index]
+            }
+            listSize.push(objectTmp)
+        });
+    }
+    
 
     delete req.body.size
     delete req.body.price
@@ -236,25 +247,44 @@ module.exports.edit = async (req,res)=>{
 module.exports.editPatch = async (req,res)=>{
 
     req.body.discountPercentage = parseInt(req.body.discountPercentage)
+    const productId = req.params.id
+    const product = await Product.findOne({
+        _id: productId
+      }).select("thumbnail title slug listSize discountPercentage status")
 
     const sizes = req.body.size
     const prices = req.body.price
     const stocks = req.body.stock
     var listSize = []
     if(typeof sizes == "string"){
-        const objectTmp = {
+        var objectTmp = {
             size: sizes,
             price: prices,
             stock: stocks
+        }
+        for(const item of product.listSize){
+            if(item.size == sizes){
+                objectTmp = item
+                objectTmp.price = prices
+                objectTmp.stock = stocks
+            }
         }
         listSize.push(objectTmp)
     }
     else{
         for(let i = 0; i < sizes.length;i++){
-            const objectTmp = {
+            var objectTmp ={}
+            objectTmp = {
                 size: sizes[i],
                 price: prices[i],
                 stock: stocks[i]
+            }
+            for(const item of product.listSize){
+                if(item.size == sizes[i]){
+                    objectTmp = item
+                    objectTmp.price = prices[i]
+                    objectTmp.stock = stocks[i]
+                }
             }
             listSize.push(objectTmp)
         }

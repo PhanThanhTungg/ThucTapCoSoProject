@@ -48,6 +48,7 @@ module.exports.order = async (req, res) => {
     _id: cartId
   })
 
+
   const products = []
 
   for (const product of cart.products) {
@@ -62,8 +63,14 @@ module.exports.order = async (req, res) => {
     }).select("listSize discountPercentage")
 
     const sizeInfo = productInfo.listSize.find(i=>{
-      return i.id = product.sizeId
+      return i.id == objectProduct.size_id
+      
     })
+
+    objectProduct.size = sizeInfo.size
+    objectProduct.price= sizeInfo.price
+    objectProduct.discountPercentage = productInfo.discountPercentage
+    objectProduct.priceNew = (objectProduct.price * (100 - objectProduct.discountPercentage)/100).toFixed(0)
 
     products.push(objectProduct)
   }

@@ -59,8 +59,8 @@ block main
                         a(
                           href=`/products/detail/${order.productInfo.slug}`
                         ) #{order.productInfo.title}
-                      td #{order.sizeInfo.size}
-                      td.formatMoney #{order.sizeInfo.priceNew}đ
+                      td #{order.size}
+                      td.formatMoney #{order.priceNew}đ
                       td
                         input(
                           value=order.quantity

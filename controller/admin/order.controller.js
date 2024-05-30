@@ -40,15 +40,15 @@ module.exports.index = async (req, res) => {
           orderItem.sizeInfo = sizeInfo
     
           orderItem.productInfo = product
-          orderItem.sizeInfo.priceNew = (sizeInfo.price * (100 - product.discountPercentage)/100).toFixed(0)
-
+          orderItem.priceNew = (item.price * (100 - item.discountPercentage)/100).toFixed(0)
+          orderItem.size = item.size
           orderItem.userInfo = userInfo
 
           orderItem.quantity= item.quantity
           orderItem.id = item.id
           orderItem.status= item.status
     
-          orderItem.totalPrice = item.quantity * orderItem.sizeInfo.priceNew
+          orderItem.totalPrice = item.quantity * orderItem.priceNew
 
           orderItem.orderId = orderDetail.id
 
